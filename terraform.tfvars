@@ -1,4 +1,4 @@
-rg_name = "tf-module-rg1"
+rg_name = "tf-module-rg2"
 rg_location = "West Europe"
-sa_name = "stroageacc45poc"
+sa_name = "stroageacc45poc1"
 sc_name = "blob-container"
