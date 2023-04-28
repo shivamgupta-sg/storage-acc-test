@@ -20,14 +20,14 @@ parameters:
     type: string
   
 steps:
-- script: echo ${{parameter.domain}}
+- script: echo ${{parameters.domain}}
   displayName: 'Print Domain Parameter'
 
-- script: echo ${{parameter.env}}
+- script: echo ${{parameters.env}}
   displayName: 'Print Environment Parameter'
 
-- script: echo ${{parameter.subscriptionId}}
+- script: echo ${{parameters.subscriptionId}}
   displayName: 'Print Subscription ID Parameter' 
 
-- script: echo ${{parameter.customerId}}
+- script: echo ${{parameters.customerId}}
   displayName: 'Print Customer ID Parameter'
