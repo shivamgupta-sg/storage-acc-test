@@ -1,6 +1,6 @@
 {
   "domain":"us-east",
   "env":"dev",
-  "subscriptionId":"1234-5678-9012-3456"
+  "subscriptionId":"1234-5678-9012-3456",
   "customerId":"1234"
 }
