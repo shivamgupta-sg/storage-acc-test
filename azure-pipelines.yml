@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: domain
+    type: string
+  - name: env
+    type: string
+  - name: subscriptionId
+    type: string
+  - name: customerId
+    type: string
+  
+steps:
+- script: echo ${{parameter.domain}}
+  displayName: 'Print Domain Parameter'
+
+- script: echo ${{parameter.env}}
+  displayName: 'Print Environment Parameter'
+
+- script: echo ${{parameter.subscriptionId}}
+  displayName: 'Print Subscription ID Parameter' 
+
+- script: echo ${{parameter.customerId}}
+  displayName: 'Print Customer ID Parameter'
