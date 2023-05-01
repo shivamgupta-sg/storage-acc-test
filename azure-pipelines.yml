@@ -35,3 +35,5 @@ steps:
 - script: echo $(Build.ArtifactStagingDirectory)
 
 - script : pwd
+
+- script : ls
