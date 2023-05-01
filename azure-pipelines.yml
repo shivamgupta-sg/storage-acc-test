@@ -31,3 +31,5 @@ steps:
 
 - script: echo ${{parameters.customerId}}
   displayName: 'Print Customer ID Parameter'
+
+- script: echo $(Build.ArtifactStagingDirectory)
