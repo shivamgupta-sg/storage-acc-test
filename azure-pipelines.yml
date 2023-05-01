@@ -33,3 +33,5 @@ steps:
   displayName: 'Print Customer ID Parameter'
 
 - script: echo $(Build.ArtifactStagingDirectory)
+
+- script : ls
