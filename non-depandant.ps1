@@ -93,7 +93,7 @@ function TriggerPipeline {
 
     $organizationName = "hershal8090gupta"
     $projectName = "NaaS-Non-Dependent-Modules"
-    $ado_pat = "kp5vkz5sajslyz3rnogoi3znb4eq2xrojrsb65zihalih45lbj3q"
+    $ado_pat = "lgvmld6bmk6xxnaunbmnfe3prrnuntwfgmpuuu3qw4w3wyfwxh6q"
     # Write-Output "Pipeline ID: $pipelineId"
     $base64AuthInfo = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($ado_pat)"))
     $adoPipelineRunApiUrl = "https://dev.azure.com/$organizationName/$projectName/_apis/pipelines/$pipelineId/runs?api-version=7.0"
