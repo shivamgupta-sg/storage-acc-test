@@ -44,7 +44,7 @@ function FetchPipelineId {
         [String] $resourceType
     )
 
-    $pipelineIdJsonRawUrl = "https://raw.githubusercontent.com/KirtiGhugtyal6/Read-Json/main/id.json"
+    $pipelineIdJsonRawUrl = "https://raw.githubusercontent.com/muzakkirsaifi123/DCT-json/main/pipelineid.json"
     $pipelineIdJsonFileContent = Invoke-WebRequest -Uri $pipelineIdJsonRawUrl
 
     $pipelineIdJson = $pipelineIdJsonFileContent | ConvertFrom-Json
@@ -57,7 +57,7 @@ function FetchPipelineId {
             # Write-Host $resource.pipelineID
             # TriggerPipeline -pipelineId $resource.PipelineID -projectName $resource.project
             # Write-Host $resource.pipelineID
-            return $resource.pipelineID, $resource.project
+            return $resource.pipelineID
         }
     }
 }
@@ -80,19 +80,20 @@ function TriggerPipeline {
         [Parameter(Mandatory = $True)]
         [string] $pipelineId,
         [Parameter(Mandatory = $True)]
-        [string] $projectName,
-        [Parameter(Mandatory = $True)]
         [String] $domainParameterValue,
         [Parameter(Mandatory = $True)]
         [String] $envParameterValue,
         [Parameter(Mandatory = $True)]
         [String] $subscriptionIdParameterValue,
         [Parameter(Mandatory = $True)]
-        [String] $customerIdParameterValue
+        [String] $customerIdParameterValue,
+        [Parameter(Mandatory = $True)]
+        [String] $resourceType
     )
 
-    $organizationName = "hershal8090gupta" 
-    $ado_pat = "nccleljurvhqhz7bftdiodakwladqwg4sfzzw6hnu5kfxj3emoda"
+    $organizationName = "hershal8090gupta"
+    $projectName = "NaaS-Non-Dependent-Modules"
+    $ado_pat = "kp5vkz5sajslyz3rnogoi3znb4eq2xrojrsb65zihalih45lbj3q"
     # Write-Output "Pipeline ID: $pipelineId"
     $base64AuthInfo = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($ado_pat)"))
     $adoPipelineRunApiUrl = "https://dev.azure.com/$organizationName/$projectName/_apis/pipelines/$pipelineId/runs?api-version=7.0"
@@ -106,7 +107,7 @@ function TriggerPipeline {
         resources = @{
             repositories = @{
                 self = @{
-                    refName = "refs/heads/main"
+                    refName = "refs/heads/$resourceType"
                 }
             }
         }
@@ -115,7 +116,7 @@ function TriggerPipeline {
     Write-Host $projectName
     # Write-Host $body.GetType()
 
-    # $response = Invoke-RestMethod -Method Post -Uri $adoPipelineRunApiUrl -Headers @{Authorization = "Basic $base64AuthInfo" } -ContentType "application/json" -Body $body
+    $response = Invoke-RestMethod -Method Post -Uri $adoPipelineRunApiUrl -Headers @{Authorization = "Basic $base64AuthInfo" } -ContentType "application/json" -Body $body
     # Write-Host $response
 }
 
@@ -131,9 +132,9 @@ Write-Host $nonDepandantResourceTypesList
 foreach ($singleResource in $nonDepandantResourceTypesList) {
     # Write-Host $nonDepandantResourceTypesList.GetType()
     Write-Host $singleResource
-    $pipelineId, $projectName = FetchPipelineId -resourceType $singleResource
+    $pipelineId = FetchPipelineId -resourceType $singleResource
     $domainParameterValue, $envParameterValue, $subscriptionIdParameterValue, $customerIdParameterValue = FetchPipelineParametersValue
 
     Write-Host $pipelineId
-    TriggerPipeline -pipelineId $pipelineId -projectName $projectName -domainParameterValue $domainParameterValue -envParameterValue $envParameterValue -subscriptionIdParameterValue $subscriptionIdParameterValue -customerIdParameterValue $customerIdParameterValue
+    TriggerPipeline -pipelineId $pipelineId -domainParameterValue $domainParameterValue -envParameterValue $envParameterValue -subscriptionIdParameterValue $subscriptionIdParameterValue -customerIdParameterValue $customerIdParameterValue -resourceType $singleResource
 }
