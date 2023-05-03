@@ -1,8 +1,37 @@
 # PARAMETERS
-Param(
-    [Parameter(Mandatory = $True)]
-    [String] $resourceType
-)
+# Param(
+#     [Parameter(Mandatory = $True)]
+#     [String] $resourceType
+# )
+
+
+function GetNonDepandantAndDepandantResourceTypesList {
+    # param (
+    #     OptionalParameters
+    # )
+    $consolidatedJsonRawUrl = "https://raw.githubusercontent.com/harshit0015/githubconnector-demo/conslidate-json/testing-resource.json"
+    $consolidatedJsonFileContent = Invoke-WebRequest -Uri $consolidatedJsonRawUrl
+
+    $consolidatedJson = $consolidatedJsonFileContent | ConvertFrom-Json
+
+    $nonDependantResourcesList = @()
+
+    # Write-Host $consolidatedJsonFileContent
+
+    foreach ($resource in $consolidatedJson.resources) {
+        # Write-Host $resource.properties.dependsOn
+        # Write-Host -Not $resource.properties.dependsOn
+        if ($resource.properties.dependsOn -eq "false") {
+            $nonDependantResourcesList += $resource.name
+        }
+        
+    }
+
+    # Write-Host $nonDependantResourcesList.GetType()
+
+    # Write-Host $nonDependantResourcesList
+    return $nonDependantResourcesList
+}
 
 # $credentials = "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"
 # $repo = "KirtiGhugtyal6/Read-Json"
@@ -20,10 +49,14 @@ function FetchPipelineId {
 
     $pipelineIdJson = $pipelineIdJsonFileContent | ConvertFrom-Json
 
+    # Write-Host $pipelineIdJsonFileContent
+
+    # Write-Host $resourceType
     foreach ($resource in $pipelineIdJson.resources) {
         if ($resource.resourceType -eq $resourceType) {
             # Write-Host $resource.pipelineID
             # TriggerPipeline -pipelineId $resource.PipelineID -projectName $resource.project
+            # Write-Host $resource.pipelineID
             return $resource.pipelineID, $resource.project
         }
     }
@@ -79,13 +112,28 @@ function TriggerPipeline {
         }
     } | ConvertTo-Json
 
-    Write-Host $body.GetType()
+    Write-Host $projectName
+    # Write-Host $body.GetType()
 
-    $response = Invoke-RestMethod -Method Post -Uri $adoPipelineRunApiUrl -Headers @{Authorization = "Basic $base64AuthInfo" } -ContentType "application/json" -Body $body
-    Write-Host $response
+    # $response = Invoke-RestMethod -Method Post -Uri $adoPipelineRunApiUrl -Headers @{Authorization = "Basic $base64AuthInfo" } -ContentType "application/json" -Body $body
+    # Write-Host $response
 }
 
 
-$pipelineId, $projectName = FetchPipelineId -resourceType $resourceType
-$domainParameterValue, $envParameterValue, $subscriptionIdParameterValue, $customerIdParameterValue = FetchPipelineParametersValue
-TriggerPipeline -pipelineId $pipelineId -projectName $projectName -domainParameterValue $domainParameterValue -envParameterValue $envParameterValue -subscriptionIdParameterValue $subscriptionIdParameterValue -customerIdParameterValue $customerIdParameterValue
+# $pipelineId, $projectName = FetchPipelineId -resourceType $resourceType
+# $domainParameterValue, $envParameterValue, $subscriptionIdParameterValue, $customerIdParameterValue = FetchPipelineParametersValue
+# TriggerPipeline -pipelineId $pipelineId -projectName $projectName -domainParameterValue $domainParameterValue -envParameterValue $envParameterValue -subscriptionIdParameterValue $subscriptionIdParameterValue -customerIdParameterValue $customerIdParameterValue
+
+$nonDepandantResourceTypesList=GetNonDepandantAndDepandantResourceTypesList
+# $pipelineId, $projectName = FetchPipelineId -resourceType storage-account
+
+Write-Host $nonDepandantResourceTypesList
+foreach ($singleResource in $nonDepandantResourceTypesList) {
+    # Write-Host $nonDepandantResourceTypesList.GetType()
+    Write-Host $singleResource
+    $pipelineId, $projectName = FetchPipelineId -resourceType $singleResource
+    $domainParameterValue, $envParameterValue, $subscriptionIdParameterValue, $customerIdParameterValue = FetchPipelineParametersValue
+
+    Write-Host $pipelineId
+    TriggerPipeline -pipelineId $pipelineId -projectName $projectName -domainParameterValue $domainParameterValue -envParameterValue $envParameterValue -subscriptionIdParameterValue $subscriptionIdParameterValue -customerIdParameterValue $customerIdParameterValue
+}
