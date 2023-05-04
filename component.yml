@@ -1,17 +1,146 @@
 ---
+version:
+- versionNumber: 1.0.2
+  releaseDate: ''
+- versionNumber: 1.0.1
+  releaseDate: ''
 resources:
-- resourceType: storage-account
-  pipelineID: '7'
-  organization: hershal8090gupta
-- resourceType: app-service-plan
-  pipelineID: '9'
-  organization: hershal8090gupta
-- resourceType: event-hub
-  pipelineID: '4'
-  organization: hershal8090gupta
-- resourceType: event-grid-topic
-  pipelineID: '6'
-  organization: hershal8090gupta
-- resourceType: function-app
-  pipelineID: '5'
-  organization: hershal8090gupta
+- name: storage-account
+  properties:
+    cloud: Azure
+    resourceType: storage-account
+    dependsOn: 'false'
+    resourceGroupName: ''
+    accountTier: ''
+    accountRepliationType: ''
+    minTlsVersion: ''
+    enableHttpsTrafficOnly: 'true'
+    blobProperties:
+      deleteRetentionPolicy:
+        days: ''
+    allowNestedItemsToBePublic: 'false'
+    networkRules:
+      defaultAction: ''
+      virtualNetworkRules: []
+    tags: {}
+- name: blob-container
+  properties:
+    resourceType: storage-container
+    storage_account_name: ''
+    container_access_type: private
+- name: app-service-plan
+  properties:
+    cloud: Azure
+    resourceType: app-service-plan
+    dependsOn: 'false'
+    resourceGroupName: ''
+    osType: ''
+    skuName: ''
+    pricingPlan: ''
+    tags: {}
+- name: async-req-handler
+  properties:
+    cloud: Azure
+    resourceType: function-app
+    dependsOn: 'true'
+    resourceGroupName: ''
+    storageAccountName: ''
+    appServicePlan: ''
+    storageAccountAccessKey: ''
+    os_type: ''
+    siteConfig:
+      http2Enabled: ''
+      healthCheckPath: ''
+      applicationStack:
+        dotnetVersion: ''
+      virtual_network_subnet_id: []
+    tags: {}
+  dependencies:
+  - resourceType: storage-account
+  - resourceType: app-service-plan
+- name: sync-async-notification-handler
+  properties:
+    cloud: Azure
+    resourceType: function-app
+    dependsOn: 'true'
+    resourceGroupName: ''
+    storageAccountName: ''
+    appServicePlan: ''
+    storageAccountAccessKey: ''
+    os_type: ''
+    siteConfig:
+      http2Enabled: ''
+      healthCheckPath: ''
+      applicationStack:
+        dotnetVersion: ''
+      virtual_network_subnet_id: []
+    tags: {}
+  dependencies:
+  - resourceType: storage-account
+  - resourceType: app-service-plan
+- name: email
+  properties:
+    cloud: Azure
+    resourceType: function-app
+    dependsOn: 'true'
+    resourceGroupName: ''
+    storageAccountName: ''
+    appServicePlan: ''
+    storageAccountAccessKey: ''
+    os_type: ''
+    siteConfig:
+      http2Enabled: ''
+      healthCheckPath: ''
+      applicationStack:
+        dotnetVersion: ''
+      virtual_network_subnet_id: []
+    tags: {}
+  dependencies:
+  - resourceType: storage-account
+  - resourceType: app-service-plan
+- name: in-app
+  properties:
+    cloud: Azure
+    resourceType: function-app
+    dependsOn: 'true'
+    resourceGroupName: ''
+    storageAccountName: ''
+    appServicePlan: ''
+    storageAccountAccessKey: ''
+    os_type: ''
+    siteConfig:
+      http2Enabled: ''
+      healthCheckPath: ''
+      applicationStack:
+        dotnetVersion: ''
+      virtual_network_subnet_id: []
+    tags: {}
+  dependencies:
+  - resourceType: storage-account
+  - resourceType: app-service-plan
+- name: event-hub
+  properties:
+    name: ''
+    namespaceName: ''
+    resourceType: event-hub
+    dependsOn: 'false'
+    resourceGroupName: ''
+    messageRetention: ''
+    partitionCount: ''
+- name: eventhub-namspace
+  properties:
+    name: ''
+    resourceType: event-hub
+    resourceGroupName: ''
+    sku: ''
+    capacity: ''
+    tags: {}
+- name: event-grid-topic
+  properties:
+    resourceType: event-grid-topic
+    dependsOn: 'false'
+    resourceGroup: ''
+    identity:
+      type: ''
+      identityIds: ''
+    tags: {}
