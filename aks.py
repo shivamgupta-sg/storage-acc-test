@@ -84,7 +84,7 @@ def build_headers_for_ado_with_authorization(ado_pat_token: str, content_type: s
 # trigger pipeline
 def trigger_pipeline(pipeline_id: str, organization_name: str, project_name: str, pipeline_parameters:dict={}) -> int:
     api_url = f"https://dev.azure.com/{organization_name}/{project_name}/_apis/pipelines/{pipeline_id}/runs?api-version=7.0"
-    ado_pat = "5ksagqcy5zvb4nzqxyljn6kr2nlnlw5v3nk2xgygjoxpoothxvlq"
+    ado_pat = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
     # print(pipeline_parameters)
     
@@ -160,7 +160,7 @@ def remove_file(filename: str) -> int:
 def main():
     # download the Github Repository as a zip file
     zipfile_name = get_github_repo(owner="duck-creek", repo="DCOD.Next.EMS",
-                                   ref="master", token="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")
+                                   ref="master", token="xxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
     # extract the zip file (github repository)
     extract_zip_file(file=zipfile_name)
